@@ -12,7 +12,7 @@ pub fn find_crates(query: String) -> Result<Vec<Krate>, Error> {
     let connector = HttpsConnector::new(ssl);
     let client = Client::with_connector(connector);
 
-    let url = format!("https://crates.io/api/v1/crates?q={}", query);
+    let url = format!("https://crates.io/api/v1/crates?sort=downloads&q={}", query);
     let mut resp = client.get(&url).send()?;
     let mut buffer = String::new();
     resp.read_to_string(&mut buffer).unwrap();

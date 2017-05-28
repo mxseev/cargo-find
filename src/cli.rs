@@ -1,4 +1,4 @@
-use termion::{color, style};
+use termion::{color, style, terminal_size};
 use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
@@ -58,11 +58,14 @@ impl Cli {
         for (i, item) in self.items.iter().enumerate() {
             let title: String;
             if i == self.current_item {
-                title = format!("{}{}{}", color::Fg(color::Blue), item.title, style::Reset);
+                title = format!("{}{}{}",
+                                color::Fg(color::Blue),
+                                crop(item.title.clone()),
+                                style::Reset);
             } else {
-                title = item.title.clone();
+                title = crop(item.title.clone());
             }
-            buffer = format!("{}{}\r\n", buffer, title);
+            buffer += &format!("{}\r\n", title);
         }
 
         buffer = buffer.trim_right_matches("\r\n").to_string();
@@ -103,14 +106,25 @@ impl Cli {
 fn line_count(buffer: &str) -> u16 {
     buffer.rmatches("\r\n").count() as u16
 }
+fn crop(biffer: String) -> String {
+    let mut biffer = biffer.replace("\n", "");
+    let (term_width, _) = terminal_size().unwrap();
+    if biffer.len() - 3 > term_width as usize {
+        biffer.truncate(term_width as usize - 3);
+        biffer += "..."
+    }
+
+    biffer
+}
 
 pub fn fmt_krate(krate: Krate) -> String {
     let line = |key: &str, val: &str| {
-        format!("{}{}:{} {}\r\n",
-                color::Fg(color::Blue),
-                key,
-                style::Reset,
-                val)
+        let maybe_long = format!("{}{}:{} {}",
+                                 color::Fg(color::Blue),
+                                 key,
+                                 style::Reset,
+                                 val.to_string());
+        format!("{}\r\n", crop(maybe_long))
     };
 
     let mut fmt = String::new();
