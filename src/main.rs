@@ -34,5 +34,9 @@ fn main() {
         });
     }
 
-    cli.print_items(items);
+    if items.len() < 1 {
+        cli.print("No results");
+    } else {
+        cli.print_items(items);
+    }
 }
