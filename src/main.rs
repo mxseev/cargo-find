@@ -16,10 +16,10 @@ use cli::{Cli, Item};
 
 fn main() {
     let mut cli = Cli::new();
-    let query = match env::args().nth(1) {
+    let query = match env::args().nth(2) {
         Some(query) => query,
         None => {
-            println!("Use: cargo-find <query>");
+            println!("Use: cargo find <query>");
             process::exit(2);
         }
     };
