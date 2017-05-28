@@ -1,10 +1,12 @@
 use termion::{color, style};
-
 use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use termion::{clear, cursor};
+
 use std::io::{Write, stdout, stdin};
+
+use crates::Krate;
 
 
 #[derive(Clone)]
@@ -100,4 +102,47 @@ impl Cli {
 
 fn line_count(buffer: &str) -> u16 {
     buffer.rmatches("\r\n").count() as u16
+}
+
+pub fn fmt_krate(krate: Krate) -> String {
+    let line = |key: &str, val: &str| {
+        format!("{}{}:{} {}\r\n",
+                color::Fg(color::Blue),
+                key,
+                style::Reset,
+                val)
+    };
+
+    let mut fmt = String::new();
+    fmt += &line("Name", &krate.name);
+    fmt += &line("Description", &krate.description);
+    fmt += &line("Last version", &krate.max_version);
+
+    match krate.license {
+        Some(license) => fmt += &line("License", &license),
+        None => {}
+    }
+    match krate.homepage {
+        Some(homepage) => fmt += &line("Home page", &homepage),
+        None => {}
+    }
+    match krate.documentation {
+        Some(doc) => fmt += &line("Documentation", &doc),
+        None => {}
+    }
+    match krate.repository {
+        Some(repository) => fmt += &line("Repository", &repository),
+        None => {}
+    }
+
+    fmt += &line("Created", &parse_time(krate.created_at));
+    fmt += &line("Updated", &parse_time(krate.updated_at));
+
+    fmt = fmt.trim_right_matches("\r\n").to_string();
+    fmt
+}
+
+fn parse_time(time: String) -> String {
+    // time::strptime....
+    time.replace("T", " ").replace("Z", "")
 }

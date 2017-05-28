@@ -1,36 +1,38 @@
+#[macro_use]
+extern crate serde_derive;
+extern crate serde;
+extern crate serde_json;
+extern crate hyper;
+extern crate hyper_native_tls;
 extern crate termion;
 
+use std::env;
+use std::process;
+
 mod cli;
+mod error;
+mod crates;
 use cli::{Cli, Item};
 
 fn main() {
     let mut cli = Cli::new();
-    let krates = vec![Item {
-                          title: "First item".to_string(),
-                          full: "Expanded first".to_string(),
-                      },
-                      Item {
-                          title: "Second item".to_string(),
-                          full: "Expanded two".to_string(),
-                      },
-                      Item {
-                          title: "Thi item".to_string(),
-                          full: "Expanded tri".to_string(),
-                      },
-                      Item {
-                          title: "Thi item".to_string(),
-                          full: "Expanded tri".to_string(),
-                      },
-                      Item {
-                          title: "Thi item".to_string(),
-                          full: "Expanded tri".to_string(),
-                      },
-                      Item {
-                          title: "Thi item".to_string(),
-                          full: "Expanded tri".to_string(),
-                      }];
+    let query = match env::args().nth(1) {
+        Some(query) => query,
+        None => {
+            println!("Use: cargo-find <query>");
+            process::exit(2);
+        }
+    };
 
     cli.print("Searching....");
-    std::thread::sleep_ms(1000);
-    cli.print_items(krates);
+    let crates = crates::find_crates(query).unwrap();
+    let mut items = Vec::new();
+    for krate in crates {
+        items.push(Item {
+            title: format!("{} - {}", krate.name, krate.description),
+            full: cli::fmt_krate(krate),
+        });
+    }
+
+    cli.print_items(items);
 }
