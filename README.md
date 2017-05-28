@@ -6,3 +6,6 @@ Find crates from command line
 cargo install cargo-find
 cargo find <crate name>
 ```
+
+## Demo
+![Demo](demo.gif)
