@@ -5,6 +5,7 @@ extern crate serde_json;
 extern crate hyper;
 extern crate hyper_native_tls;
 extern crate termion;
+extern crate time;
 
 use std::env;
 use std::process;
@@ -30,7 +31,7 @@ fn main() {
     for krate in crates {
         items.push(Item {
             title: format!("{} - {}", krate.name, krate.description),
-            full: cli::fmt_krate(krate),
+            full: cli::fmt_krate(krate).unwrap(),
         });
     }
 

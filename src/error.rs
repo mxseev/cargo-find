@@ -2,6 +2,7 @@ use std::io;
 use hyper;
 use hyper_native_tls::native_tls;
 use serde_json;
+use time;
 
 
 #[derive(Debug)]
@@ -10,6 +11,7 @@ pub enum Error {
     Http(hyper::Error),
     Tls(native_tls::Error),
     Json(serde_json::Error),
+    Time(time::ParseError),
 }
 
 impl From<io::Error> for Error {
@@ -30,5 +32,10 @@ impl From<native_tls::Error> for Error {
 impl From<serde_json::Error> for Error {
     fn from(e: serde_json::Error) -> Self {
         Error::Json(e)
+    }
+}
+impl From<time::ParseError> for Error {
+    fn from(e: time::ParseError) -> Self {
+        Error::Time(e)
     }
 }

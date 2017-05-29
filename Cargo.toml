@@ -1,6 +1,6 @@
 [package]
 name = "cargo-find"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Maxim Lis <ralvke@gmail.com>"]
 description = "Find crates from command line"
 license = "MIT"
@@ -13,3 +13,4 @@ hyper-native-tls = "0.2.2"
 serde = "1.0.8"
 serde_derive = "1.0.8"
 serde_json = "1.0.2"
+time = "0.1.37"
