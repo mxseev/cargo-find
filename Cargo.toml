@@ -1,6 +1,6 @@
 [package]
 name = "cargo-find"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Maxim Lis <ralvke@gmail.com>"]
 description = "Find crates from command line"
 license = "MIT"

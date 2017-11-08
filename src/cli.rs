@@ -56,10 +56,12 @@ impl Cli {
         for (i, item) in self.items.iter().enumerate() {
             let title: String;
             if i == self.current_item {
-                title = format!("{}{}{}",
-                                color::Fg(color::Blue),
-                                item.title.clone(),
-                                style::Reset);
+                title = format!(
+                    "{}{}{}",
+                    color::Fg(color::Blue),
+                    item.title.clone(),
+                    style::Reset
+                );
             } else {
                 title = item.title.clone();
             }
@@ -101,11 +103,13 @@ impl Cli {
 
 pub fn fmt_krate(krate: Krate) -> Result<String, Error> {
     let line = |key: &str, val: &str| {
-        format!("{}{}:{} {}\r\n",
-                color::Fg(color::Blue),
-                key,
-                style::Reset,
-                val.replace("\n", ""))
+        format!(
+            "{}{}:{} {}\r\n",
+            color::Fg(color::Blue),
+            key,
+            style::Reset,
+            val.replace("\n", "")
+        )
     };
 
     let mut fmt = String::new();
@@ -133,6 +137,6 @@ pub fn fmt_krate(krate: Krate) -> Result<String, Error> {
 }
 
 fn parse_time(t: String) -> Result<String, Error> {
-    let parsed = time::strptime(&t, "%Y-%m-%dT%H:%M:%SZ")?;
+    let parsed = time::strptime(&t, "%Y-%m-%dT%H:%M:%S")?;
     Ok(time::strftime("%Y-%m-%d %H:%M:%S", &parsed)?)
 }
